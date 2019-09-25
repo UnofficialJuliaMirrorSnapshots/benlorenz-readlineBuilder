@@ -1,0 +1,32 @@
+language: julia
+os:
+- linux
+julia:
+- 1.2
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+  - downloads
+env:
+  global:
+  - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+  - BINARYBUILDER_AUTOMATIC_APPLE=true
+sudo: required
+before_script:
+- julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+script:
+- julia  --color=yes build_tarballs.jl
+deploy:
+  provider: releases
+  api_key:
+    secure: TiYu5FK6D6VWeqYuhhU2SZCa93AgYbo3RpUCdS9lQwjFqdL2ryOc01rJ48AiUCzYTb71kl7+qkt6UGlu85zDPJdxFnpc8QBUE1ACN+hsHAJb54v4lu2Xu9RDfv4o6KdEc/36h/whdYfilJXoOJpkGW6y+xQVxLRiwwdYwerC56cpXM6WYzxNJkvyzMmsPajoTENz0iAqQFXFb4difL6zlYzloVvWf1OvjoB7dOEdQGipBh9UDMNfDNFsAM8MVRAHOrmlUz9w6MlLPLwJwBrLi8jG8ZVp7ZoqDVv+GIQm3cblyrZ2tGUeWLJ5Eiefoc2aS4pWz5Tavzu9/ZFotkmT331iyYcBo4iyZuvv/SpSTQce8RtE+w7l5LWoioLPGvAkMmlc968tlESRL92TyKaQ4VKG8R2bD/9enzSTU/ejyCKybj/7wgzEUA7jjJkMdVZ3vr5qB81Spk1Oc68U49OsK3TJqTf2ua404cLh/yfThmFc44pX+wBKx2xhrkCdBnhhq3fHzPcQRjn9lqdz3T7ieHBvJUHAHlQwVhi2KkbknmUrCuZ6RFrCsFhF9ga+MaBJSJ1d87nSnG+D0d+qZtAqlMJQQoVkxpZwgfWD9iT2dRTMyXWmF9NbSvC23XVctU3hmGaSGg4R2sMVNsiZISmYZguqvlzIMwn8X/mqsXOUdyo=
+  file: products/*
+  file_glob: true
+  skip_cleanup: true
+  on:
+    repo: benlorenz/readlineBuilder
+    tags: true
